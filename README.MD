@@ -1,7 +1,7 @@
 SqlFlex
 =======
 
-A tool to help developers work efficiently with relational databases.
+A tool to help developers work efficiently with relational databases.  Descendent of [TSQL-Flex](https://github.com/nycdotnet/TSqlFlex).
 
 ### Current status:
 Pre-alpha.  No useful features yet.
