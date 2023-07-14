@@ -19,6 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SqlFlex\SqlFlex.csproj" />
+    <ProjectReference Include="..\SqlFlex.Core\SqlFlex.Core.csproj" />
   </ItemGroup>
 </Project>

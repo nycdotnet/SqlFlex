@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace SqlFlex.ViewModels
+namespace SqlFlex.Ui.ViewModels
 {
     public partial class ConnectViewModel : ObservableObject
     {

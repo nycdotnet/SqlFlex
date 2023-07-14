@@ -1,11 +1,12 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
-using SqlFlex.ViewModels;
+using SqlFlex.Core;
+using SqlFlex.Ui.ViewModels;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace SqlFlex;
+namespace SqlFlex.Ui;
 
 public partial class MainWindow : Window
 {

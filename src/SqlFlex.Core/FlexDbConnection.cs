@@ -1,7 +1,7 @@
 ﻿using Npgsql;
 using System.Data;
 
-namespace SqlFlex
+namespace SqlFlex.Core
 {
     public class FlexDbConnection
     {

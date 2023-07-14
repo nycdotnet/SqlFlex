@@ -1,8 +1,8 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using SqlFlex.ViewModels;
+using SqlFlex.Ui.ViewModels;
 
-namespace SqlFlex;
+namespace SqlFlex.Ui;
 
 public partial class ConnectWindow : Window
 {
