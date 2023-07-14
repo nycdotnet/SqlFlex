@@ -18,10 +18,10 @@ namespace SqlFlex.ViewModels
         public ConnectViewModel()
         {
             Provider = "Npgsql";
-            Host = "";
-            Username = "";
-            Password = "";
-            Database = "";
+            Host = "host";
+            Username = "username";
+            Password = "pw";
+            Database = "db";
         }
     }
 }

@@ -1,6 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using SqlFlex.ViewModels;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace SqlFlex;
 
@@ -11,9 +14,30 @@ public partial class MainWindow : Window
         InitializeComponent();
     }
 
-    public async void btnConnect_Click(object sender, RoutedEventArgs args)
+    private void ConnectCommand(object sender, RoutedEventArgs args)
     {
-        var connect = new ConnectWindow();
-        var result = await connect.ShowDialog<ConnectViewModel>(this);
+        Dispatcher.UIThread.Post(() => ShowConnectWindow());
+    }
+
+    private async Task ShowConnectWindow()
+    {
+        var connectWindow = new ConnectWindow();
+        var connectionInfo = await connectWindow.ShowDialog<ConnectViewModel>(this);
+        var dbConnection = new FlexDbConnection(
+            connectionInfo.Provider,
+            connectionInfo.Host,
+            connectionInfo.Username,
+            connectionInfo.Password,
+            connectionInfo.Database);
+
+        try
+        {
+            dbConnection.Open();
+            Debug.WriteLine("Connected.");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.WriteLine("Error: " + ex.Message);
+        }
     }
 }
