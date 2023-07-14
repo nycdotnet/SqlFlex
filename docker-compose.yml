@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    command: -c 'max_connections=250'
+    environment:
+      POSTGRES_PASSWORD: "SqlFlexInsecureDevPassword"
+      POSTGRES_DB: sql-flex
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: psql -U postgres -c 'select 1'
+      interval: 10s
+      timeout: 1s
+      retries: 20
+volumes:
+  pgdata:
+  
