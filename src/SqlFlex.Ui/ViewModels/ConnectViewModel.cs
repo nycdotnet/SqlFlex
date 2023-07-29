@@ -36,18 +36,12 @@ namespace SqlFlex.Ui.ViewModels
         }
         public void SetConnection(FlexDbConnection? connection)
         {
-            switch (connection?.Connection)
+            ConnectionHeadline = (connection?.Connection) switch
             {
-                case null:
-                    ConnectionHeadline = NotConnected;
-                    break;
-                case { State: ConnectionState.Open }:
-                    ConnectionHeadline = $"Connected to {Host} (db: {Database})";
-                    break;
-                default:
-                    ConnectionHeadline = $"Connection to {Host} is {connection.Connection.State}";
-                    break;
-            }
+                null => NotConnected,
+                { State: ConnectionState.Open } => $"Connected to {Host} (db: {Database})",
+                _ => $"Connection to {Host} is {connection.Connection.State}",
+            };
         }
 
         public const string NotConnected = "Not Connected";

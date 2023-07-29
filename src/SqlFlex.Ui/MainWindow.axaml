@@ -5,27 +5,38 @@
 		xmlns:vm="using:SqlFlex.Ui.ViewModels"
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
         x:Class="SqlFlex.Ui.MainWindow"
-        Title="SqlFlex">
+        Title="SqlFlex"
+		x:DataType="vm:MainWindowViewModel"
+		x:CompileBindings="True">
 	<Grid ColumnDefinitions="*" RowDefinitions="Auto, 5*, Auto, 5*">
 		<Panel Grid.Row="0" Background="DarkSeaGreen">
 			<Grid
 				x:Name="ConnectionGrid"
-				x:DataType="vm:ConnectViewModel"
-				x:CompileBindings="True"
 				RowDefinitions="*"
 				ColumnDefinitions="Auto, *"
 				VerticalAlignment="Center"
 				Margin="3">
 				<Button Grid.Column="0" Click="ConnectCommand" Background="LightGray">Connect</Button>
-				<Label Padding="6,0,0,0" Grid.Column="1" Content="{Binding ConnectionHeadline}" VerticalContentAlignment="Center"></Label>
+				<Label Padding="6,0,0,0" Grid.Column="1" Content="{Binding ConnectViewModel.ConnectionHeadline}" VerticalContentAlignment="Center"></Label>
 			</Grid>
 		</Panel>
-		<TextBox Grid.Row="1" AcceptsReturn="True" FontFamily="Consolas" AcceptsTab="False">-- enter a SQL query here.</TextBox>
+		<!-- Input panel -->
+		<TextBox Grid.Row="1"
+				 AcceptsReturn="True"
+				 FontFamily="Consolas"
+				 AcceptsTab="False"
+				 Text="{Binding QueryText}">
+		</TextBox>
+		<!-- Activity panel -->
 		<Panel Grid.Row="2" Background="DarkSeaGreen">
 			<Grid Margin="3">
-				<Button Background="LightGray">Run</Button>
+				<Button Background="LightGray" Click="RunQueryCommand">Run</Button>
 			</Grid>
 		</Panel>
-		<TextBox Grid.Row="3" AcceptsReturn="True" FontFamily="Consolas" IsReadOnly="True">/* RESULTS GO HERE */</TextBox>
+		<!-- Results panel -->
+		<TextBox Grid.Row="3"
+				 FontFamily="Consolas"
+				 IsReadOnly="True"
+				 Text="{Binding ResultText}"></TextBox>
 	</Grid>
 </Window>

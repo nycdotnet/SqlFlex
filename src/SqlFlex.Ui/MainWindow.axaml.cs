@@ -12,24 +12,24 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        SetConnectionGridDataContext();
+        DataContext = ViewModel;
     }
 
-    private void SetConnectionGridDataContext()
-    {
-        var grid = this.FindControl<Grid>("ConnectionGrid");
-        if (grid is not null)
-        {
-            grid.DataContext = ConnectViewModel;
-        }
-    }
-
-    public ConnectViewModel ConnectViewModel { get; set; } = new();
-    public FlexDbConnection? DbConnection { get; set; }
+    public MainWindowViewModel ViewModel { get; set; } = new();
 
     private void ConnectCommand(object sender, RoutedEventArgs args)
     {
         Dispatcher.UIThread.Post(async () => await ShowConnectWindow());
+    }
+
+    private void RunQueryCommand(object sender, RoutedEventArgs args)
+    {
+        Dispatcher.UIThread.Post(async () => await RunQuery());
+    }
+
+    private async Task RunQuery()
+    {
+        ViewModel.ResultText = $"Running query:\n{ViewModel.QueryText}";
     }
 
     private async Task ShowConnectWindow()
@@ -41,27 +41,27 @@ public partial class MainWindow : Window
         {
             return;
         }
-        ConnectViewModel = newConnectionInfo;
-        SetConnectionGridDataContext();
-        DbConnection?.Dispose();
+        ViewModel.ConnectViewModel = newConnectionInfo;
+        ViewModel.DbConnection?.Dispose();
 
-        DbConnection = new FlexDbConnection(
-            ConnectViewModel.Provider,
-            ConnectViewModel.Host,
-            ConnectViewModel.Username,
-            ConnectViewModel.Password,
-            ConnectViewModel.Database);
+        // TODO: This logic should probably all live in the view model rather than in the form.
+        ViewModel.DbConnection = new FlexDbConnection(
+            ViewModel.ConnectViewModel.Provider,
+            ViewModel.ConnectViewModel.Host,
+            ViewModel.ConnectViewModel.Username,
+            ViewModel.ConnectViewModel.Password,
+            ViewModel.ConnectViewModel.Database);
 
         try
         {
-            DbConnection.Open();
+            ViewModel.DbConnection.Open();
         }
         catch (System.Exception ex)
         {
-            ConnectViewModel.SetConnection(ex);
+            ViewModel.ConnectViewModel.SetConnection(ex);
             return;
         }
 
-        ConnectViewModel.SetConnection(DbConnection);
+        ViewModel.ConnectViewModel.SetConnection(ViewModel.DbConnection);
     }
 }

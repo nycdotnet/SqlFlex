@@ -26,6 +26,9 @@ namespace SqlFlex.Core
 
         public IDbConnection? Connection { get; private set; }
 
+        /// <summary>
+        /// Will close the connection if it is open, dispose of it, and null it out.
+        /// </summary>
         public void Dispose()
         {
             if (Connection is null) return;
