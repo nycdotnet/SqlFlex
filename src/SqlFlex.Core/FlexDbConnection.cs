@@ -1,5 +1,6 @@
 ﻿using Npgsql;
 using System.Data;
+using System.Text;
 
 namespace SqlFlex.Core
 {
@@ -25,6 +26,26 @@ namespace SqlFlex.Core
         }
 
         public IDbConnection? Connection { get; private set; }
+
+        public async Task<string> ExecuteToCsvAsync(string query)
+        {
+            if (Connection is Npgsql.NpgsqlConnection pgConn)
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine("Running query......");
+                using var command = new NpgsqlCommand(query, pgConn);
+                using var reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    sb.AppendLine(reader.GetString(0));
+                }
+                return sb.ToString();
+            }
+            else
+            {
+                return "Unsupported connection type!!";
+            }
+        }
 
         /// <summary>
         /// Will close the connection if it is open, dispose of it, and null it out.

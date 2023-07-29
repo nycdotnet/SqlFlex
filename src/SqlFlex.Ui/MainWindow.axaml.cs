@@ -29,7 +29,8 @@ public partial class MainWindow : Window
 
     private async Task RunQuery()
     {
-        ViewModel.ResultText = $"Running query:\n{ViewModel.QueryText}";
+        ViewModel.ResultText = $"Running query...";
+        ViewModel.ResultText = await ViewModel.DbConnection.ExecuteToCsvAsync(ViewModel.QueryText);
     }
 
     private async Task ShowConnectWindow()
