@@ -2,8 +2,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
         x:Class="SqlFlex.Ui.MainWindow"
         Title="SqlFlex">
-	<Button Click="ConnectCommand">Connect</Button>
+	<Grid ColumnDefinitions="*" RowDefinitions="1*, 5*, 5*">
+		<Panel Grid.Row="0">
+			<Grid RowDefinitions="*" ColumnDefinitions="Auto, *">
+				<Button Grid.Column="0" Click="ConnectCommand">Connect</Button>
+				<Label Grid.Column="1">Connected to...</Label>
+			</Grid>
+			
+		</Panel>
+		<TextBox Grid.Row="1" AcceptsReturn="True" FontFamily="Consolas" AcceptsTab="False">-- enter a SQL query here.</TextBox>
+		<TextBox Grid.Row="2" AcceptsReturn="True" FontFamily="Consolas" IsReadOnly="True">/* RESULTS GO HERE */</TextBox>
+	</Grid>
+
 </Window>
