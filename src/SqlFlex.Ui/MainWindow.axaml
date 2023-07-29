@@ -17,7 +17,7 @@
 				VerticalAlignment="Center"
 				Margin="3">
 				<Button Grid.Column="0" Click="ConnectCommand" Background="LightGray">Connect</Button>
-				<Label Padding="6,0,0,0" Grid.Column="1" Content="{Binding ConnectViewModel.ConnectionHeadline}" VerticalContentAlignment="Center"></Label>
+				<Label Content="{Binding ConnectionHeadline}" Padding="6,0,0,0" Grid.Column="1" VerticalContentAlignment="Center"></Label>
 			</Grid>
 		</Panel>
 		<!-- Input panel -->
@@ -30,7 +30,10 @@
 		<!-- Activity panel -->
 		<Panel Grid.Row="2" Background="DarkSeaGreen">
 			<Grid Margin="3">
-				<Button Background="LightGray" Click="RunQueryCommand">Run</Button>
+				<Button
+					Background="LightGray"
+					Click="RunQueryCommand"
+					IsEnabled="{Binding ConnectionReady}">Run</Button>
 			</Grid>
 		</Panel>
 		<!-- Results panel -->

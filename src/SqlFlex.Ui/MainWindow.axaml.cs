@@ -41,27 +41,13 @@ public partial class MainWindow : Window
         {
             return;
         }
-        ViewModel.ConnectViewModel = newConnectionInfo;
-        ViewModel.DbConnection?.Dispose();
 
-        // TODO: This logic should probably all live in the view model rather than in the form.
+        ViewModel.ConnectionViewModel = newConnectionInfo;
         ViewModel.DbConnection = new FlexDbConnection(
-            ViewModel.ConnectViewModel.Provider,
-            ViewModel.ConnectViewModel.Host,
-            ViewModel.ConnectViewModel.Username,
-            ViewModel.ConnectViewModel.Password,
-            ViewModel.ConnectViewModel.Database);
-
-        try
-        {
-            ViewModel.DbConnection.Open();
-        }
-        catch (System.Exception ex)
-        {
-            ViewModel.ConnectViewModel.SetConnection(ex);
-            return;
-        }
-
-        ViewModel.ConnectViewModel.SetConnection(ViewModel.DbConnection);
+            ViewModel.ConnectionViewModel.Provider,
+            ViewModel.ConnectionViewModel.Host,
+            ViewModel.ConnectionViewModel.Username,
+            ViewModel.ConnectionViewModel.Password,
+            ViewModel.ConnectionViewModel.Database);
     }
 }

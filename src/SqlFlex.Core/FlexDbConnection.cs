@@ -3,7 +3,7 @@ using System.Data;
 
 namespace SqlFlex.Core
 {
-    public class FlexDbConnection : IDisposable
+    public sealed class FlexDbConnection : IDisposable
     {
         public FlexDbConnection(
             string Provider,
