@@ -13,32 +13,55 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        SetConnectionGridDataContext();
     }
+
+    private void SetConnectionGridDataContext()
+    {
+        var grid = this.FindControl<Grid>("ConnectionGrid");
+        if (grid is not null)
+        {
+            grid.DataContext = ConnectViewModel;
+        }
+    }
+
+    public ConnectViewModel ConnectViewModel { get; set; } = new();
+    public FlexDbConnection DbConnection { get; set; }
 
     private void ConnectCommand(object sender, RoutedEventArgs args)
     {
-        Dispatcher.UIThread.Post(() => ShowConnectWindow());
+        Dispatcher.UIThread.Post(async () => await ShowConnectWindow());
     }
 
     private async Task ShowConnectWindow()
     {
         var connectWindow = new ConnectWindow();
-        var connectionInfo = await connectWindow.ShowDialog<ConnectViewModel>(this);
-        var dbConnection = new FlexDbConnection(
-            connectionInfo.Provider,
-            connectionInfo.Host,
-            connectionInfo.Username,
-            connectionInfo.Password,
-            connectionInfo.Database);
+        var newConnectionInfo = await connectWindow.ShowDialog<ConnectViewModel>(this);
+
+        if (newConnectionInfo is null)
+        {
+            return;
+        }
+        ConnectViewModel = newConnectionInfo;
+        SetConnectionGridDataContext();
+
+        DbConnection = new FlexDbConnection(
+            ConnectViewModel.Provider,
+            ConnectViewModel.Host,
+            ConnectViewModel.Username,
+            ConnectViewModel.Password,
+            ConnectViewModel.Database);
 
         try
         {
-            dbConnection.Open();
-            Debug.WriteLine("Connected.");
+            DbConnection.Open();
         }
         catch (System.Exception ex)
         {
-            Debug.WriteLine("Error: " + ex.Message);
+            ConnectViewModel.SetConnection(ex);
+            return;
         }
+
+        ConnectViewModel.SetConnection(DbConnection);
     }
 }

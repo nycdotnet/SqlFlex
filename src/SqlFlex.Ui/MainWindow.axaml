@@ -2,19 +2,26 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:vm="using:SqlFlex.Ui.ViewModels"
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
         x:Class="SqlFlex.Ui.MainWindow"
         Title="SqlFlex">
-	<Grid ColumnDefinitions="*" RowDefinitions="1*, 5*, 5*">
+	<Grid ColumnDefinitions="*" RowDefinitions="Auto, 5*, 5*">
 		<Panel Grid.Row="0">
-			<Grid RowDefinitions="*" ColumnDefinitions="Auto, *">
+			<Grid
+				x:Name="ConnectionGrid"
+				x:DataType="vm:ConnectViewModel"
+				x:CompileBindings="True"
+				RowDefinitions="*"
+				ColumnDefinitions="Auto, *"
+				VerticalAlignment="Center"
+				Margin="3">
 				<Button Grid.Column="0" Click="ConnectCommand">Connect</Button>
-				<Label Grid.Column="1">Connected to...</Label>
+				<Label Padding="6,0,0,0" Grid.Column="1" Content="{Binding ConnectionHeadline}" VerticalContentAlignment="Center"></Label>
 			</Grid>
 			
 		</Panel>
 		<TextBox Grid.Row="1" AcceptsReturn="True" FontFamily="Consolas" AcceptsTab="False">-- enter a SQL query here.</TextBox>
 		<TextBox Grid.Row="2" AcceptsReturn="True" FontFamily="Consolas" IsReadOnly="True">/* RESULTS GO HERE */</TextBox>
 	</Grid>
-
 </Window>
