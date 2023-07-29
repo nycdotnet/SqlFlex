@@ -23,10 +23,10 @@ namespace SqlFlex.Ui.ViewModels
         public ConnectViewModel()
         {
             Provider = "Npgsql";
-            Host = "host";
-            Username = "username";
-            Password = "pw";
-            Database = "db";
+            Host = "localhost";
+            Username = "postgres";
+            Password = "SqlFlexInsecureDevPassword";
+            Database = "sql-flex";
             ConnectionHeadline = NotConnected;
         }
 
@@ -34,9 +34,9 @@ namespace SqlFlex.Ui.ViewModels
         {
             ConnectionHeadline = $"Connection error: {ex.Message}";
         }
-        public void SetConnection(FlexDbConnection connection)
+        public void SetConnection(FlexDbConnection? connection)
         {
-            switch (connection.Connection)
+            switch (connection?.Connection)
             {
                 case null:
                     ConnectionHeadline = NotConnected;

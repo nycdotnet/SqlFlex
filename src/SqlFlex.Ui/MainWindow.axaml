@@ -6,8 +6,8 @@
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
         x:Class="SqlFlex.Ui.MainWindow"
         Title="SqlFlex">
-	<Grid ColumnDefinitions="*" RowDefinitions="Auto, 5*, 5*">
-		<Panel Grid.Row="0">
+	<Grid ColumnDefinitions="*" RowDefinitions="Auto, 5*, Auto, 5*">
+		<Panel Grid.Row="0" Background="DarkSeaGreen">
 			<Grid
 				x:Name="ConnectionGrid"
 				x:DataType="vm:ConnectViewModel"
@@ -16,12 +16,16 @@
 				ColumnDefinitions="Auto, *"
 				VerticalAlignment="Center"
 				Margin="3">
-				<Button Grid.Column="0" Click="ConnectCommand">Connect</Button>
+				<Button Grid.Column="0" Click="ConnectCommand" Background="LightGray">Connect</Button>
 				<Label Padding="6,0,0,0" Grid.Column="1" Content="{Binding ConnectionHeadline}" VerticalContentAlignment="Center"></Label>
 			</Grid>
-			
 		</Panel>
 		<TextBox Grid.Row="1" AcceptsReturn="True" FontFamily="Consolas" AcceptsTab="False">-- enter a SQL query here.</TextBox>
-		<TextBox Grid.Row="2" AcceptsReturn="True" FontFamily="Consolas" IsReadOnly="True">/* RESULTS GO HERE */</TextBox>
+		<Panel Grid.Row="2" Background="DarkSeaGreen">
+			<Grid Margin="3">
+				<Button Background="LightGray">Run</Button>
+			</Grid>
+		</Panel>
+		<TextBox Grid.Row="3" AcceptsReturn="True" FontFamily="Consolas" IsReadOnly="True">/* RESULTS GO HERE */</TextBox>
 	</Grid>
 </Window>

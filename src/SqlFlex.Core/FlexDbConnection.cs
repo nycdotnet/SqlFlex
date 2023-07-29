@@ -3,7 +3,7 @@ using System.Data;
 
 namespace SqlFlex.Core
 {
-    public class FlexDbConnection
+    public class FlexDbConnection : IDisposable
     {
         public FlexDbConnection(
             string Provider,
@@ -24,11 +24,23 @@ namespace SqlFlex.Core
             };
         }
 
-        public IDbConnection Connection { get; }
+        public IDbConnection? Connection { get; private set; }
+
+        public void Dispose()
+        {
+            if (Connection is null) return;
+
+            if (Connection.State == ConnectionState.Open)
+            {
+                Connection.Close();
+            }
+            Connection?.Dispose();
+            Connection = null;
+        }
 
         public void Open()
         {
-            Connection.Open();
+            Connection!.Open();
         }
     }
 }

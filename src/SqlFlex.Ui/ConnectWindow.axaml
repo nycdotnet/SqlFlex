@@ -18,7 +18,7 @@
 		<Label Grid.Column="0" Grid.Row="2">User</Label>
 		<TextBox Text="{Binding Username}" Grid.Column="1" Grid.Row="2"></TextBox>
 		<Label Grid.Column="0" Grid.Row="3">Password</Label>
-		<TextBox Text="{Binding Password}" Grid.Column="1" Grid.Row="3"></TextBox>
+		<TextBox Text="{Binding Password}" Grid.Column="1" Grid.Row="3" PasswordChar="*"></TextBox>
 		<Label Grid.Column="0" Grid.Row="4">Database</Label>
 		<TextBox Text="{Binding Database}" Grid.Column="1" Grid.Row="4"></TextBox>
 		<Button Grid.Column="1" Grid.Row="5" Click="ConnectCommand">Connect</Button>

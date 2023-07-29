@@ -3,7 +3,6 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using SqlFlex.Core;
 using SqlFlex.Ui.ViewModels;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace SqlFlex.Ui;
@@ -26,7 +25,7 @@ public partial class MainWindow : Window
     }
 
     public ConnectViewModel ConnectViewModel { get; set; } = new();
-    public FlexDbConnection DbConnection { get; set; }
+    public FlexDbConnection? DbConnection { get; set; }
 
     private void ConnectCommand(object sender, RoutedEventArgs args)
     {
@@ -44,6 +43,7 @@ public partial class MainWindow : Window
         }
         ConnectViewModel = newConnectionInfo;
         SetConnectionGridDataContext();
+        DbConnection?.Dispose();
 
         DbConnection = new FlexDbConnection(
             ConnectViewModel.Provider,
