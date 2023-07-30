@@ -29,6 +29,7 @@ public partial class MainWindow : Window
 
     private async Task RunQuery()
     {
+        //TODO: switch over to Avalonia.AvaloniaEdit
         ViewModel.ResultText = $"Running query...";
         ViewModel.ResultText = await ViewModel.DbConnection.ExecuteToCsvAsync(ViewModel.QueryText);
     }

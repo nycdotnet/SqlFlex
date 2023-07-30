@@ -29,16 +29,64 @@ namespace SqlFlex.Core
 
         public async Task<string> ExecuteToCsvAsync(string query)
         {
-            if (Connection is Npgsql.NpgsqlConnection pgConn)
+            if (Connection is NpgsqlConnection pgConn)
             {
                 var sb = new StringBuilder();
-                sb.AppendLine("Running query......");
                 using var command = new NpgsqlCommand(query, pgConn);
-                using var reader = await command.ExecuteReaderAsync();
-                while (await reader.ReadAsync())
+
+                try
                 {
-                    sb.AppendLine(reader.GetString(0));
+                    using var reader = await command.ExecuteReaderAsync();
+                    var schema = await reader.GetSchemaTableAsync();
+                    
+                    var serializers = new Func<NpgsqlDataReader, int, string>[schema.Rows.Count];
+                    for (var i = 0; i < schema.Rows.Count; i++)
+                    {
+                        var r = schema.Rows[i];
+                        var type = r[12] as Type;
+                        if (type == typeof(int))
+                        {
+                            serializers[i] = (NpgsqlDataReader reader, int ordinal) => $"{reader.GetInt32(ordinal)}";
+                        }
+                        else if (type == typeof(bool))
+                        {
+                            serializers[i] = (NpgsqlDataReader reader, int ordinal) => $"{reader.GetBoolean(ordinal)}";
+                        }
+                        else if (type == typeof(string))
+                        {
+                            serializers[i] = (NpgsqlDataReader reader, int ordinal) => {
+                                var s = reader.GetString(ordinal);
+                                if (s.Contains(','))
+                                {
+                                    return $"\"{s}\"";
+                                }
+                                return s;
+                            };
+                        }
+                        else
+                        {
+                            throw new NotSupportedException($"This data type is not supported: {type.FullName}");
+                        }
+                    }
+
+                    while (await reader.ReadAsync())
+                    {
+                        for(var i = 0; i < serializers.Length; i++)
+                        {
+                            sb.Append(serializers[i](reader, i));
+                            if (i + 1 < serializers.Length)
+                            {
+                                sb.Append(',');
+                            }
+                        }
+                        sb.Append('\n');
+                    }
                 }
+                catch (Exception ex)
+                {
+                    sb.AppendLine($"Error running query: {ex.Message}");
+                }
+                
                 return sb.ToString();
             }
             else

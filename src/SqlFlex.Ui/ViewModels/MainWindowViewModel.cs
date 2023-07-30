@@ -11,7 +11,7 @@ namespace SqlFlex.Ui.ViewModels
     {
         public MainWindowViewModel()
         {
-            QueryText = "-- enter a query here.";
+            QueryText = "SELECT 1 as \"num\", 'hello world' as \"words\", false as \"boo\";";
             ResultText = "/* Results will be displayed here */";
             ConnectionHeadline = NotConnected;
             ConnectionViewModel = new();
