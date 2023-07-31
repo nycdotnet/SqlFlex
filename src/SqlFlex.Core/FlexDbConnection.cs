@@ -29,6 +29,13 @@ namespace SqlFlex.Core
 
         public async Task<string> ExecuteToCsvAsync(string query)
         {
+            // TODO: This is a massive co-mingling of concerns.  Need to separate:
+            // - running of the query (per provider)
+            // - parsing the schema (per provider)
+            // - formatting the various data types (per provider/per format)
+            // - combining the data per row
+            // - forking if the output gets too big to a "file download".
+            // This is interesting: https://www.stevejgordon.co.uk/creating-a-readonlysequence-from-array-data-in-dotnet
             if (Connection is NpgsqlConnection pgConn)
             {
                 var sb = new StringBuilder();
