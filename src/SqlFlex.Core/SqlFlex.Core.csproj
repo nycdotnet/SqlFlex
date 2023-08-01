@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Npgsql" Version="7.0.4" />
+    <PackageReference Include="System.IO.Pipelines" Version="6.0.0" />
   </ItemGroup>
 
 </Project>
