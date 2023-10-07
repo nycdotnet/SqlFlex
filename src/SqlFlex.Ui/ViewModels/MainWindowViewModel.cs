@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using AvaloniaEdit.Document;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Npgsql;
 using SqlFlex.Core;
 using System;
@@ -11,8 +12,8 @@ namespace SqlFlex.Ui.ViewModels
     {
         public MainWindowViewModel()
         {
-            QueryText = "SELECT 1 as \"num\", 'hello world' as \"words\", false as \"boo\";";
-            ResultText = "/* Results will be displayed here */";
+            QueryDocument = new TextDocument("SELECT 1 as \"num\", 'hello world' as \"words\", false as \"boo\";");
+            ResultsDocument = new TextDocument("/* Results will be displayed here */");
             ConnectionHeadline = NotConnected;
             ConnectionViewModel = new();
             PropertyChanged += MainWindowViewModel_PropertyChanged;
@@ -64,11 +65,9 @@ namespace SqlFlex.Ui.ViewModels
 
         private FlexDbConnection? _dbConnection;
 
-        [ObservableProperty]
-        private string _queryText;
+        public TextDocument QueryDocument { get; init; }
 
-        [ObservableProperty]
-        private string _resultText;
+        public TextDocument ResultsDocument { get; init; }
 
         [ObservableProperty]
         private ConnectViewModel _connectionViewModel;

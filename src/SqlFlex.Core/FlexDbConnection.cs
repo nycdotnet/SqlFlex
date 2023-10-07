@@ -44,7 +44,8 @@ namespace SqlFlex.Core
                 try
                 {
                     using var reader = await command.ExecuteReaderAsync();
-                    var schema = await reader.GetSchemaTableAsync();
+
+                    var schema = await reader.GetSchemaTableAsync() ?? throw new ApplicationException("Unable to read schema table");
                     
                     var serializers = new Func<NpgsqlDataReader, int, string>[schema.Rows.Count];
                     for (var i = 0; i < schema.Rows.Count; i++)
@@ -72,7 +73,7 @@ namespace SqlFlex.Core
                         }
                         else
                         {
-                            throw new NotSupportedException($"This data type is not supported: {type.FullName}");
+                            throw new NotSupportedException($"This data type is not supported: {type?.FullName ?? "Unknown type"}");
                         }
                     }
 
