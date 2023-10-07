@@ -23,12 +23,6 @@
             </Grid>
         </Panel>
         <!-- Input panel -->
-        <!--<TextBox Grid.Row="1"
-                 AcceptsReturn="True"
-                 FontFamily="Consolas"
-                 AcceptsTab="False"
-                 Text="{Binding QueryText}">
-        </TextBox>-->
         <AvaloniaEdit:TextEditor
             Grid.Row="1"
             FontFamily="Cascadia Code,Consolas,Menlo,Monospace"
