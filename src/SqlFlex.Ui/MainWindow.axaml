@@ -2,44 +2,61 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:vm="using:SqlFlex.Ui.ViewModels"
+        
+        xmlns:AvaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+        xmlns:vm="using:SqlFlex.Ui.ViewModels"
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
         x:Class="SqlFlex.Ui.MainWindow"
         Title="SqlFlex"
-		x:DataType="vm:MainWindowViewModel"
-		x:CompileBindings="True">
-	<Grid ColumnDefinitions="*" RowDefinitions="Auto, 5*, Auto, 5*">
-		<Panel Grid.Row="0" Background="DarkSeaGreen">
-			<Grid
-				x:Name="ConnectionGrid"
-				RowDefinitions="*"
-				ColumnDefinitions="Auto, *"
-				VerticalAlignment="Center"
-				Margin="3">
-				<Button Grid.Column="0" Click="ConnectCommand" Background="LightGray">Connect</Button>
-				<Label Content="{Binding ConnectionHeadline}" Padding="6,0,0,0" Grid.Column="1" VerticalContentAlignment="Center"></Label>
-			</Grid>
-		</Panel>
-		<!-- Input panel -->
-		<TextBox Grid.Row="1"
-				 AcceptsReturn="True"
-				 FontFamily="Consolas"
-				 AcceptsTab="False"
-				 Text="{Binding QueryText}">
-		</TextBox>
-		<!-- Activity panel -->
-		<Panel Grid.Row="2" Background="DarkSeaGreen">
-			<Grid Margin="3">
-				<Button
-					Background="LightGray"
-					Click="RunQueryCommand"
-					IsEnabled="{Binding ConnectionReady}">Run</Button>
-			</Grid>
-		</Panel>
-		<!-- Results panel -->
-		<TextBox Grid.Row="3"
-				 FontFamily="Consolas"
-				 IsReadOnly="True"
-				 Text="{Binding ResultText}"></TextBox>
-	</Grid>
+        x:DataType="vm:MainWindowViewModel"
+        x:CompileBindings="True">
+    <Grid ColumnDefinitions="*" RowDefinitions="Auto, 5*, Auto, 5*">
+        <Panel Grid.Row="0" Background="DarkSeaGreen">
+            <Grid
+                x:Name="ConnectionGrid"
+                RowDefinitions="*"
+                ColumnDefinitions="Auto, *"
+                VerticalAlignment="Center"
+                Margin="3">
+                <Button Grid.Column="0" Click="ConnectCommand" Background="LightGray">Connect</Button>
+                <Label Content="{Binding ConnectionHeadline}" Padding="6,0,0,0" Grid.Column="1" VerticalContentAlignment="Center"></Label>
+            </Grid>
+        </Panel>
+        <!-- Input panel -->
+        <!--<TextBox Grid.Row="1"
+                 AcceptsReturn="True"
+                 FontFamily="Consolas"
+                 AcceptsTab="False"
+                 Text="{Binding QueryText}">
+        </TextBox>-->
+        <AvaloniaEdit:TextEditor
+            Grid.Row="1"
+            FontFamily="Cascadia Code,Consolas,Menlo,Monospace"
+            FontSize="14"
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Visible"
+            Document="{Binding QueryDocument}"
+            >
+        </AvaloniaEdit:TextEditor>
+        <!-- Activity panel -->
+        <Panel Grid.Row="2" Background="DarkSeaGreen">
+            <Grid Margin="3">
+                <Button
+                    Background="LightGray"
+                    Click="RunQueryCommand"
+                    IsEnabled="{Binding ConnectionReady}">Run</Button>
+            </Grid>
+        </Panel>
+        <!-- Results panel -->
+        <AvaloniaEdit:TextEditor
+            Grid.Row="3"
+            FontFamily="Cascadia Code,Consolas,Menlo,Monospace"
+            FontSize="14"
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Visible"
+            Document="{Binding ResultsDocument}"
+            IsReadOnly="True"
+            >
+        </AvaloniaEdit:TextEditor>
+    </Grid>
 </Window>
