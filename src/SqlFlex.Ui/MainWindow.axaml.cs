@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using AvaloniaEdit.Document;
 using SqlFlex.Core;
 using SqlFlex.Ui.ViewModels;
 using System.Threading.Tasks;
@@ -31,7 +32,11 @@ public partial class MainWindow : Window
     {
         //TODO: switch over to Avalonia.AvaloniaEdit
         ViewModel.ResultsDocument.Text = $"Running query...";
-        ViewModel.ResultsDocument.Text = await ViewModel.DbConnection.ExecuteToCsvAsync(ViewModel.QueryDocument.Text);
+        ViewModel.ResultsDocument.BeginUpdate();
+        ViewModel.ResultsDocument.Text = "";
+        var content = await ViewModel.DbConnection.ExecuteToCsvAsync(ViewModel.QueryDocument.Text);
+        ViewModel.ResultsDocument.Insert(0, content);
+        ViewModel.ResultsDocument.EndUpdate();
     }
 
     private async Task ShowConnectWindow()

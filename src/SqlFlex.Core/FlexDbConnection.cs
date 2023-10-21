@@ -38,64 +38,34 @@ namespace SqlFlex.Core
             // This is interesting: https://www.stevejgordon.co.uk/creating-a-readonlysequence-from-array-data-in-dotnet
             if (Connection is NpgsqlConnection pgConn)
             {
-                var sb = new StringBuilder();
+                var outputBuffer = new StringBuilder();
                 using var command = new NpgsqlCommand(query, pgConn);
 
                 try
                 {
                     using var reader = await command.ExecuteReaderAsync();
 
-                    var schema = await reader.GetSchemaTableAsync() ?? throw new ApplicationException("Unable to read schema table");
+                    var serializers = new PostgresFieldSerializer(await reader.GetSchemaTableAsync());
                     
-                    var serializers = new Func<NpgsqlDataReader, int, string>[schema.Rows.Count];
-                    for (var i = 0; i < schema.Rows.Count; i++)
-                    {
-                        var r = schema.Rows[i];
-                        var type = r[12] as Type;
-                        if (type == typeof(int))
-                        {
-                            serializers[i] = (NpgsqlDataReader reader, int ordinal) => $"{reader.GetInt32(ordinal)}";
-                        }
-                        else if (type == typeof(bool))
-                        {
-                            serializers[i] = (NpgsqlDataReader reader, int ordinal) => $"{reader.GetBoolean(ordinal)}";
-                        }
-                        else if (type == typeof(string))
-                        {
-                            serializers[i] = (NpgsqlDataReader reader, int ordinal) => {
-                                var s = reader.GetString(ordinal);
-                                if (s.Contains(','))
-                                {
-                                    return $"\"{s}\"";
-                                }
-                                return s;
-                            };
-                        }
-                        else
-                        {
-                            throw new NotSupportedException($"This data type is not supported: {type?.FullName ?? "Unknown type"}");
-                        }
-                    }
-
                     while (await reader.ReadAsync())
                     {
-                        for(var i = 0; i < serializers.Length; i++)
+                        for (var i = 0; i < serializers.Count; i++)
                         {
-                            sb.Append(serializers[i](reader, i));
-                            if (i + 1 < serializers.Length)
+                            outputBuffer.Append(serializers.Stringify(reader, i));
+                            if (i + 1 < serializers.Count)
                             {
-                                sb.Append(',');
+                                outputBuffer.Append(',');
                             }
                         }
-                        sb.Append('\n');
+                        outputBuffer.Append('\n');
                     }
                 }
                 catch (Exception ex)
                 {
-                    sb.AppendLine($"Error running query: {ex.Message}");
+                    outputBuffer.AppendLine($"Error running query: {ex.Message}");
                 }
                 
-                return sb.ToString();
+                return outputBuffer.ToString();
             }
             else
             {
