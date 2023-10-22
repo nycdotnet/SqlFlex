@@ -1,9 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
-using AvaloniaEdit.Document;
 using SqlFlex.Core;
 using SqlFlex.Ui.ViewModels;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace SqlFlex.Ui;
@@ -32,11 +32,35 @@ public partial class MainWindow : Window
     {
         //TODO: switch over to Avalonia.AvaloniaEdit
         ViewModel.ResultsDocument.Text = $"Running query...";
+        await Task.Yield();
         ViewModel.ResultsDocument.BeginUpdate();
         ViewModel.ResultsDocument.Text = "";
-        var content = await ViewModel.DbConnection.ExecuteToCsvAsync(ViewModel.QueryDocument.Text);
-        ViewModel.ResultsDocument.Insert(0, content);
+        var channel = Channel.CreateBounded<string>(new BoundedChannelOptions(10)
+        {
+            AllowSynchronousContinuations = true,
+            FullMode = BoundedChannelFullMode.Wait,
+            SingleReader = true,
+            SingleWriter = true
+        });
+
+        Dispatcher.UIThread.Post(() => {
+            string query = ViewModel.QueryDocument.Text;
+            Task.Run(() => WriteCsvChannel(channel, query));
+        });
+        int index = 0;
+        await foreach (var item in channel.Reader.ReadAllAsync())
+        {
+            Dispatcher.UIThread.Post(() => {
+                ViewModel.ResultsDocument.Insert(index, item);
+                index += item.Length;
+            });
+        }
         ViewModel.ResultsDocument.EndUpdate();
+    }
+
+    private ValueTask WriteCsvChannel(Channel<string> channel, string query)
+    {
+        return ViewModel.DbConnection.WriteCsvChannel(query, channel);
     }
 
     private async Task ShowConnectWindow()

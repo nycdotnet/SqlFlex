@@ -12,7 +12,10 @@ namespace SqlFlex.Ui.ViewModels
     {
         public MainWindowViewModel()
         {
-            QueryDocument = new TextDocument("SELECT 1 as \"num\", 'hello world' as \"words\", false as \"boo\";");
+            QueryDocument = new TextDocument("""
+                select 'hello', true, false, gs.val, gs.val * 2, gs.val * 3, gs.val * 4, gs.val * 5, gs.val * 6, gs.val * 7, gs.val * 8, gs.val * 9
+                from generate_series(0, 99999) gs(val)
+                """);
             ResultsDocument = new TextDocument("/* Results will be displayed here */");
             ConnectionHeadline = NotConnected;
             ConnectionViewModel = new();
