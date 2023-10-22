@@ -70,7 +70,8 @@ namespace SqlFlex.Ui.ViewModels
 
         public TextDocument QueryDocument { get; init; }
 
-        public TextDocument ResultsDocument { get; init; }
+        [ObservableProperty]
+        private TextDocument _resultsDocument;
 
         [ObservableProperty]
         private ConnectViewModel _connectionViewModel;

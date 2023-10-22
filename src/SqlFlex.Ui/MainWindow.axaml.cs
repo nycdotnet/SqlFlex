@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using AvaloniaEdit.Document;
 using SqlFlex.Core;
 using SqlFlex.Ui.ViewModels;
 using System.Threading.Channels;
@@ -30,11 +31,10 @@ public partial class MainWindow : Window
 
     private async Task RunQuery()
     {
-        //TODO: switch over to Avalonia.AvaloniaEdit
         ViewModel.ResultsDocument.Text = $"Running query...";
-        await Task.Yield();
-        ViewModel.ResultsDocument.BeginUpdate();
-        ViewModel.ResultsDocument.Text = "";
+        var newResults = new TextDocument();
+        newResults.BeginUpdate();
+
         var channel = Channel.CreateBounded<string>(new BoundedChannelOptions(10)
         {
             AllowSynchronousContinuations = true,
@@ -51,11 +51,14 @@ public partial class MainWindow : Window
         await foreach (var item in channel.Reader.ReadAllAsync())
         {
             Dispatcher.UIThread.Post(() => {
-                ViewModel.ResultsDocument.Insert(index, item);
+                newResults.Insert(index, item);
                 index += item.Length;
             });
         }
-        ViewModel.ResultsDocument.EndUpdate();
+        newResults.EndUpdate();
+        newResults.UndoStack.ClearAll();
+        newResults.UndoStack.MarkAsOriginalFile();
+        ViewModel.ResultsDocument = newResults;
     }
 
     private ValueTask WriteCsvChannel(Channel<string> channel, string query)
